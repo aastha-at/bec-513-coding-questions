@@ -1,18 +1,17 @@
 import sys
 import pandas as pd
 
-numbers=[int(line.strip()) for line in sys.stdin]
-num_quantiles=int(sys.argv[1])
+numbers=[]
+for line in sys.stdin:
+    numbers.append(int(line.strip()))
 
-quantiles, bins=pd.qcut(numbers, num_quantiles, labels=['q' + str(i+1) for i in range(num_quantiles)], retbins=True)
+num_quant=int(sys.argv[1])
+
+quantiles, bins=pd.qcut(numbers,num_quant, labels=[str(i+1) for i in range(num_quant)], retbins=True)
 
 for i in range(len(numbers)):
     number=numbers[i]
-    quantile=quantiles[i]
-    
-    index=quantiles.categories.tolist().index(quantile)
-    start=bins[index]
-    end=bins[index+1]
-    
-    print(str(number)+'\t'+str(quantile)+'\t'+str(quantile)+' ('+str(start)+', '+str(end)+']')
+    quant=quantiles[i]
+    index=int(quant)-1
+    print(str(number)+"\t q"+str(quant)+"\t q"+str(quant)+" ("+str(bins[index])+", "+str(bins[index+1])+"]")
 
